@@ -10,9 +10,18 @@ const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
+      isDone: a.boolean(),
     })
     .authorization((allow) => [allow.owner()]),
+  
+  TrackSegment: a
+    .model({
+      name: a.string(),
+      shape: a.string(),
+    })
+  .authorization((allow) => [allow.authenticated()]),
 });
+
 
 export type Schema = ClientSchema<typeof schema>;
 
