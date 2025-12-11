@@ -7,8 +7,10 @@ const client = generateClient<Schema>();
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [trackSegments, ] = useState<Array<Schema["TrackSegment"]["type"]>>([]);
   const { user, signOut } = useAuthenticator();
 
+  
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
       next: (data) => setTodos([...data.items]),
@@ -32,6 +34,13 @@ function App() {
           <li
           onClick={() => deteleTodo(todo.id)}
           key={todo.id}>{todo.content}</li>
+        ))}
+      </ul>
+
+      <h1>Track Segments</h1>
+      <ul>
+        {trackSegments.map((trackSegment) => (
+          <li key={trackSegment.id}>{[trackSegment.name, trackSegment.shape]}</li>
         ))}
       </ul>
       <button onClick={ signOut }>Sign Out</button>

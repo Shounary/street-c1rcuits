@@ -13,7 +13,15 @@ const schema = a.schema({
       isDone: a.boolean(),
     })
     .authorization((allow) => [allow.owner()]),
+  
+  TrackSegment: a
+    .model({
+      name: a.string(),
+      shape: a.string(),
+    })
+  .authorization((allow) => [allow.publicApiKey()]),
 });
+
 
 export type Schema = ClientSchema<typeof schema>;
 
