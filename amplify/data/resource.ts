@@ -16,6 +16,7 @@ const schema = a.schema({
   
   TrackSegment: a
     .model({
+      id: a.id(),
       name: a.string(),
       type: a.enum(["straight", "arc", "clothoid", "compound"]),
       parameters: a.json(),
