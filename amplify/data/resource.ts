@@ -17,11 +17,56 @@ const schema = a.schema({
   TrackSegment: a
     .model({
       name: a.string(),
-      shape: a.string(),
+      type: a.enum(["straight", "arc", "clothoid", "compound"]),
+      parameters: a.json(),
+      metadata: a.customType({
+        description: a.string(),
+        tags: a.string().array(),
+      }),
+      preview: a.customType({
+        points: a.integer().array().array(),
+      }),
     })
   .authorization((allow) => [allow.authenticated()]),
 });
 
+
+// Segment schema
+// {
+//   "id": "string",
+//   "name": "string",
+//   "type": "straight | arc | clothoid | compound",
+//   "parameters": {
+//     // STRAIGHT:
+//     "length": "number",
+
+//     // ARC:
+//     "radius": "number",
+//     "angle_deg": "number",
+//     "direction": "left | right",
+
+//     // CLOTHOID:
+//     "kappa_start": "number",
+//     "kappa_end": "number",
+//     "length": "number",
+
+//     // COMPOUND:
+//     "components": [
+//       {
+//         "type": "straight | arc | clothoid",
+//         "parameters": { ... }
+//       }
+//     ]
+//   },
+//   "metadata": {
+//     "description": "string",
+//     "curvature": "number (optional)",
+//     "tags": ["string"]
+//   },
+//   "preview": {
+//     "points": [ [x,y], ... ]
+//   }
+// }
 
 export type Schema = ClientSchema<typeof schema>;
 

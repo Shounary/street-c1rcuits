@@ -51,7 +51,7 @@ function App() {
       <h1>Track Segments</h1>
       <ul>
         {trackSegments.map((trackSegment) => (
-          <li key={trackSegment.id}>{trackSegment.shape}</li>
+          <li key={trackSegment.id}>{trackSegment.name}</li>
         ))}
       </ul>
       <button onClick={ signOut }>Sign Out</button>
