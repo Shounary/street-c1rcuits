@@ -2,19 +2,33 @@ import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { TrackSegment, TrackSegmentInstance } from "./TrackSegment";
+import { SegmentPalette } from "./SegmentPalette";
 
 const client = generateClient<Schema>();
 
 async function fetchTrackSegments() {
   const { data: trackSegments } = await client.models.TrackSegment.list()
+  const parsedSegments = trackSegments.map((seg: any) => {
+    return {
+        type: seg.type,
+        displayName: seg.name,
+        description: seg.metadata?.description ?? 'No description',
+        defaultParameters: seg.parameters
+      }
+  })
   console.log(trackSegments)
-  return trackSegments
+  return parsedSegments
 }
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  const [trackSegments, setTrackSegments] = useState<Array<Schema["TrackSegment"]["type"]>>([]);
+  const [trackSegments, setTrackSegments] = useState<TrackSegment[]>([]);
   const { user, signOut } = useAuthenticator();
+
+  const [selectedSegment, setSelectedDefinition] = useState<TrackSegment | null>(null)
+
+  const [draftSegment, setDraftSegment] = useState<TrackSegmentInstance | null>(null)
 
   
   useEffect(() => {
@@ -27,6 +41,20 @@ function App() {
     };
     fetchData();
   }, []);
+
+
+  function onSegmentSelect(segment: TrackSegment) {
+    setSelectedDefinition(segment)
+    setDraftSegment(createDraftSegment(segment))
+  }
+
+  function createDraftSegment(def: TrackSegment): TrackSegmentInstance {
+    return {
+      id: crypto.randomUUID(),
+      type: def.type,
+      parameters: { ...def.defaultParameters }
+    }
+  }
 
   function createTodo() {
     client.models.Todo.create({ content: window.prompt("Todo content"), isDone: !!window.prompt("Todo isDone?")});
@@ -49,12 +77,37 @@ function App() {
       </ul>
 
       <h1>Track Segments</h1>
-      <ul>
+      {/* <ul>
         {trackSegments.map((trackSegment) => (
           <li key={trackSegment.id}>{trackSegment.name}</li>
         ))}
-      </ul>
-      <button onClick={ signOut }>Sign Out</button>
+      </ul> */}
+
+
+
+      {/* <div className="grid gap-3">
+      {trackSegments.map(seg => (
+        <button
+          key={seg.type}
+          // onClick={() => onSelect(seg)}
+          className="rounded-xl border p-4 hover:bg-muted text-left"
+        >
+          <h3 className="font-semibold" color="white">{seg.displayName}</h3>
+          <p className="text-sm opacity-70">{seg.description ?? 'null'}</p>
+        </button>
+      ))}
+      </div> */}
+
+      <SegmentPalette
+        segments={trackSegments}
+        onSelect={onSegmentSelect}
+      />
+
+
+
+      <button style={{ margin: "10px" }} onClick={signOut}>Sign Out</button>
+      
+
     </main>
   );
 }
