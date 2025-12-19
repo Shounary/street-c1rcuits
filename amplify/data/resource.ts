@@ -19,7 +19,7 @@ const schema = a.schema({
       id: a.id(),
       name: a.string(),
       type: a.enum(["straight", "arc", "clothoid", "compound"]),
-      parameterSchema: a.json(),
+      parameterSchema: a.json().array(),
       parameters: a.json(),
       metadata: a.customType({
         description: a.string(),
