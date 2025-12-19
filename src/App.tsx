@@ -4,6 +4,7 @@ import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { TrackSegment, TrackSegmentInstance } from "./TrackSegment";
 import { SegmentPalette } from "./SegmentPalette";
+import { SegmentEditor } from "./SegmentEditor";
 
 const client = generateClient<Schema>();
 
@@ -21,6 +22,26 @@ async function fetchTrackSegments() {
   console.log(trackSegments)
   return parsedSegments
 }
+
+// const [draftSegment, setDraftSegment] =
+//   useState<TrackSegmentInstance | null>(null)
+
+// const updateDraftParameter = (
+//   name: string,
+//   value: number | string
+// ) => {
+//   setDraftSegment(prev =>
+//     prev
+//       ? {
+//           ...prev,
+//           parameters: {
+//             ...prev.parameters,
+//             [name]: value
+//           }
+//         }
+//       : null
+//   )
+// }
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
@@ -56,6 +77,23 @@ function App() {
       type: def.type,
       parameters: { ...def.defaultParameters }
     }
+  }
+
+  const updateDraftParameter = (
+    name: string,
+    value: number | string
+  ) => {
+    setDraftSegment(prev =>
+      prev
+        ? {
+            ...prev,
+            parameters: {
+              ...prev.parameters,
+              [name]: value
+            }
+          }
+        : null
+    )
   }
 
   function createTodo() {
@@ -104,6 +142,14 @@ function App() {
         segments={trackSegments}
         onSelect={onSegmentSelect}
       />
+
+      {draftSegment && selectedSegment && (
+        <SegmentEditor
+          definition={selectedSegment}
+          segment={draftSegment}
+          onChange={updateDraftParameter}
+        />
+      )}
 
 
 
