@@ -5,15 +5,15 @@ export type TrackSegment = {
   displayName: string;
   description?: string;
   defaultParameters: Record<string, number | string>;
-//   parameterSchema: {
-//     name: string;
-//     label: string;
-//     type: "number" | "select";
-//     options?: string[];
-//     min?: number;
-//     max?: number;
-//     step?: number;
-//   }[];
+  parameterSchema: {
+    name: string;
+    label: string;
+    type: "number" | "select";
+    options?: string[];
+    min?: number;
+    max?: number;
+    step?: number;
+  }[];
 }
 
 export type TrackSegmentInstance = {
@@ -21,3 +21,4 @@ export type TrackSegmentInstance = {
   type: TrackSegmentType;
   parameters: Record<string, number | string>;
 }
+

@@ -14,7 +14,8 @@ async function fetchTrackSegments() {
         type: seg.type,
         displayName: seg.name,
         description: seg.metadata?.description ?? 'No description',
-        defaultParameters: seg.parameters
+        defaultParameters: seg.parameters,
+        parameterSchema: seg.parameterSchema
       }
   })
   console.log(trackSegments)
@@ -46,6 +47,7 @@ function App() {
   function onSegmentSelect(segment: TrackSegment) {
     setSelectedDefinition(segment)
     setDraftSegment(createDraftSegment(segment))
+    console.log(selectedSegment)
   }
 
   function createDraftSegment(def: TrackSegment): TrackSegmentInstance {
