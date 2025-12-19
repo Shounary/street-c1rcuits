@@ -3,14 +3,14 @@ import { ParameterField } from "./ParameterField"
 
 
 interface SegmentEditorProps {
-  definition: TrackSegment
-  segment: TrackSegmentInstance
+  segmentDef: TrackSegment
+  segmentInstance: TrackSegmentInstance
   onChange: (name: string, value: number | string) => void
 }
 
 export function SegmentEditor({
-  definition,
-  segment,
+  segmentDef,
+  segmentInstance,
   onChange
 }: SegmentEditorProps) {
   return (
@@ -18,7 +18,7 @@ export function SegmentEditor({
       {/* Header */}
       <div>
         <h2 className="text-lg font-semibold">
-          {definition.displayName}
+          {segmentDef.displayName}
         </h2>
         <p className="text-sm opacity-70">
           Configure segment parameters
@@ -27,11 +27,11 @@ export function SegmentEditor({
 
       {/* Parameters */}
       <div className="space-y-4">
-        {definition.parameterSchema.map(param => (
+        {segmentDef.parameterSchema.map((param, index) => (
           <ParameterField
-            key={param.name}
+            key={index}
             schema={param}
-            value={segment.parameters[param.name]}
+            value={segmentInstance.parameters[param.name]}
             onChange={onChange}
           />
         ))}

@@ -15,11 +15,11 @@ async function fetchTrackSegments() {
         type: seg.type,
         displayName: seg.name,
         description: seg.metadata?.description ?? 'No description',
-        defaultParameters: seg.parameters,
-        parameterSchema: seg.parameterSchema
+        defaultParameters: seg,
+        parameterSchema: seg.parameterSchema.map(JSON.parse)
       }
   })
-  console.log(trackSegments)
+  // console.log(trackSegments)
   return parsedSegments
 }
 
@@ -66,9 +66,11 @@ function App() {
 
 
   function onSegmentSelect(segment: TrackSegment) {
+    if (segment?.parameterSchema.length > 0) {
+      console.log(segment?.parameterSchema[0])
+    }
     setSelectedDefinition(segment)
     setDraftSegment(createDraftSegment(segment))
-    console.log(selectedSegment)
   }
 
   function createDraftSegment(def: TrackSegment): TrackSegmentInstance {
@@ -143,10 +145,12 @@ function App() {
         onSelect={onSegmentSelect}
       />
 
+      {/* <SegmentPreview segment={draftSegment} /> */}
+
       {draftSegment && selectedSegment && (
         <SegmentEditor
-          definition={selectedSegment}
-          segment={draftSegment}
+          segmentDef={selectedSegment}
+          segmentInstance={draftSegment}
           onChange={updateDraftParameter}
         />
       )}
